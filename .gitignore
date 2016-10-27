@@ -5,6 +5,7 @@
 
 # Intellij
 .idea/
+.idea/vcs.xml
 *.iml
 *.iws
 mvnw
@@ -22,3 +23,5 @@ target/
 /build
 /local.properties
 .gradle
+
+*.log
