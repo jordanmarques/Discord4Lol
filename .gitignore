@@ -21,7 +21,6 @@ target/
 
 # Config
 /build
-/local.properties
 .gradle
 
 *.log
