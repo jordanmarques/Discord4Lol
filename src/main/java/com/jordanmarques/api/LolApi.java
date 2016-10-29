@@ -2,8 +2,8 @@ package com.jordanmarques.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jordanmarques.model.Queue;
-import com.jordanmarques.model.Summoner;
+import com.jordanmarques.api.model.Queue;
+import com.jordanmarques.api.model.Summoner;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

@@ -1,4 +1,4 @@
-package com.jordanmarques.model;
+package com.jordanmarques.api.model;
 
 public class Entry {
     private String leaguePoints;

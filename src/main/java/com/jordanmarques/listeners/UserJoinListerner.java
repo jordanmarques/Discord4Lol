@@ -1,14 +1,19 @@
 package com.jordanmarques.listeners;
 
 import com.jordanmarques.api.LolApi;
-import com.jordanmarques.model.Queue;
-import com.jordanmarques.model.Summoner;
+import com.jordanmarques.api.model.Queue;
+import com.jordanmarques.api.model.Summoner;
+import com.jordanmarques.client.model.Tier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.UserVoiceChannelJoinEvent;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,7 +23,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 
@@ -37,14 +41,23 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
     @Override
     public void handle(UserVoiceChannelJoinEvent userVoiceChannelJoinEvent) {
 
-        IUser discordUser = userVoiceChannelJoinEvent.getUser();
-        String lolUsername = getLolUsernameByDiscordUsername( discordUser.getName());
+        IUser user = userVoiceChannelJoinEvent.getUser();
+        String lolUsername = getLolUsernameByDiscordUsername( user.getName());
 
         Summoner summoner = lolApi.getSummonerByName(lolUsername);
-        List<Queue> summonerQueues = lolApi.getLeagueBySummonerId(summoner.getId());
+        List<Queue> queues = lolApi.getLeagueBySummonerId(summoner.getId());
 
-        Queue soloQueueStats = getSoloQueueStats(summonerQueues);
-        String rank = soloQueueStats.getTier();
+        String tier = getSoloQueueStats(queues).getTier();
+
+        IGuild server = user.getClient().getGuilds().get(0);
+
+        try {
+            user.addRole(Tier.getTier(tier, server));
+        } catch (MissingPermissionsException | RateLimitException | DiscordException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 

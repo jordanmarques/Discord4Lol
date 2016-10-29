@@ -1,4 +1,4 @@
-package com.jordanmarques.model;
+package com.jordanmarques.api.model;
 
 import java.io.Serializable;
 
