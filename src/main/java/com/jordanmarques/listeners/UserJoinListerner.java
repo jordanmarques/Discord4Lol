@@ -3,7 +3,6 @@ package com.jordanmarques.listeners;
 import com.jordanmarques.api.LolApi;
 import com.jordanmarques.api.model.Queue;
 import com.jordanmarques.api.model.Summoner;
-import com.jordanmarques.client.model.Tier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -35,12 +34,12 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
     private LolApi lolApi;
 
     public UserJoinListerner() {
-        this.usernames = populateUsernames();
         this.lolApi = new LolApi();
     }
 
     @Override
     public void handle(UserVoiceChannelJoinEvent userVoiceChannelJoinEvent) {
+        this.usernames = populateUsernames();
 
         IUser user = userVoiceChannelJoinEvent.getUser();
         String lolUsername = getLolUsernameByDiscordUsername( user.getName());
@@ -49,9 +48,7 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
         List<Queue> queues = lolApi.getLeagueBySummonerId(summoner.getId());
 
         String tier = getSoloQueueStats(queues).getTier();
-
         IGuild server = user.getClient().getGuilds().get(0);
-
         List<IRole> roles = server.getRoles();
 
         try {
@@ -59,18 +56,15 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
         } catch (MissingPermissionsException | RateLimitException | DiscordException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private IRole getCorrectRole(String tier, List<IRole> roles) {
 
-        return roles.stream()
+        return  roles.stream()
                 .filter(role -> role.getName().equals(tier))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Enable to find role: " + tier));
+                .orElseThrow(() -> new RuntimeException("Enable to find role: " + tier + " . Create it on your server"));
     }
-
 
     private String getLolUsernameByDiscordUsername(String discordUsername) {
         if(usernames.containsKey(discordUsername))
