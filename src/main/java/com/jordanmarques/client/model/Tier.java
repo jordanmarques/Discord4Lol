@@ -1,6 +1,5 @@
 package com.jordanmarques.client.model;
 
-import sx.blah.discord.handle.impl.obj.Guild;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.Permissions;

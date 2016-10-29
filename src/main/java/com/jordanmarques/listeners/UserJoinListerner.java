@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.UserVoiceChannelJoinEvent;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -51,8 +52,10 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
 
         IGuild server = user.getClient().getGuilds().get(0);
 
+        List<IRole> roles = server.getRoles();
+
         try {
-            user.addRole(Tier.getTier(tier, server));
+            user.addRole(getCorrectRole(tier, roles));
         } catch (MissingPermissionsException | RateLimitException | DiscordException e) {
             e.printStackTrace();
         }
@@ -60,6 +63,13 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
 
     }
 
+    private IRole getCorrectRole(String tier, List<IRole> roles) {
+
+        return roles.stream()
+                .filter(role -> role.getName().equals(tier))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Enable to find role: " + tier));
+    }
 
 
     private String getLolUsernameByDiscordUsername(String discordUsername) {
