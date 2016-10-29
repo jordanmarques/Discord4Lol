@@ -8,9 +8,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class LolApi {
 
@@ -51,6 +50,26 @@ public class LolApi {
     }
 
     public List<Queue> getLeagueBySummonerId(String summonerId){
-        return null;
+        String result = "";
+        List<Queue> queues = new ArrayList<>();
+
+        StringBuilder url = new StringBuilder("https://euw.api.pvp.net/api/lol/euw/v2.5/league/by-summoner/")
+                .append(summonerId)
+                .append("/entry?api_key=" + LOL_API_KEY);
+
+        Request request = new Request.Builder()
+                .url(url.toString())
+                .build();
+
+        try{
+            Response response = client.newCall(request).execute();
+            result = response.body().string();
+            String summonerString = result.substring(result.indexOf("["), result.lastIndexOf("]")+1);
+            queues = mapper.readValue(summonerString, new TypeReference<List<Queue>>(){});
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+        return queues;
     }
 }

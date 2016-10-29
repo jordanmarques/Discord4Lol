@@ -3,16 +3,15 @@ package com.jordanmarques.model;
 import java.util.List;
 
 public class Queue {
-    private String queue;
     private String name;
+    private String tier;
+    private String queue;
     private List<Entry> entries;
 
-    public String getQueue() {
-        return queue;
-    }
+    public static final String RANKED_SOLO_5x5 = "RANKED_SOLO_5x5";
+    public static final String RANKED_TEAM_5x5 = "RANKED_TEAM_5x5";
 
-    public void setQueue(String queue) {
-        this.queue = queue;
+    public Queue() {
     }
 
     public String getName() {
@@ -23,6 +22,22 @@ public class Queue {
         this.name = name;
     }
 
+    public String getTier() {
+        return tier;
+    }
+
+    public void setTier(String tier) {
+        this.tier = tier;
+    }
+
+    public String getQueue() {
+        return queue;
+    }
+
+    public void setQueue(String queue) {
+        this.queue = queue;
+    }
+
     public List<Entry> getEntries() {
         return entries;
     }
@@ -30,4 +45,5 @@ public class Queue {
     public void setEntries(List<Entry> entries) {
         this.entries = entries;
     }
+
 }

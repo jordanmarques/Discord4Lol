@@ -1,6 +1,7 @@
 package com.jordanmarques.listeners;
 
 import com.jordanmarques.api.LolApi;
+import com.jordanmarques.model.Queue;
 import com.jordanmarques.model.Summoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 
@@ -38,6 +41,10 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
         String lolUsername = getLolUsernameByDiscordUsername( discordUser.getName());
 
         Summoner summoner = lolApi.getSummonerByName(lolUsername);
+        List<Queue> summonerQueues = lolApi.getLeagueBySummonerId(summoner.getId());
+
+        Queue soloQueueStats = getSoloQueueStats(summonerQueues);
+        String rank = soloQueueStats.getTier();
     }
 
 
@@ -65,5 +72,12 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
         }
 
         return maptoreturn;
+    }
+
+    private Queue getSoloQueueStats(List<Queue> queues){
+       return queues.stream()
+                .filter(queue -> queue.getQueue().equals(Queue.RANKED_SOLO_5x5))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Enable to find Solo queue"));
     }
 }

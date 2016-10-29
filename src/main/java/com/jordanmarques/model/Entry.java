@@ -2,16 +2,19 @@ package com.jordanmarques.model;
 
 public class Entry {
     private String leaguePoints;
-    private Boolean isFreshBlood;
-    private Boolean isHotStreak;
+    private String isFreshBlood;
+    private String isHotStreak;
     private String division;
-    private Boolean isInactive;
-    private Boolean isVeteran;
+    private String isInactive;
+    private String isVeteran;
     private String playstyle;
     private String losses;
     private String playerOrTeamName;
     private String playerOrTeamId;
     private String wins;
+
+    public Entry() {
+    }
 
     public String getLeaguePoints() {
         return leaguePoints;
@@ -21,20 +24,20 @@ public class Entry {
         this.leaguePoints = leaguePoints;
     }
 
-    public Boolean getFreshBlood() {
+    public String getIsFreshBlood() {
         return isFreshBlood;
     }
 
-    public void setFreshBlood(Boolean freshBlood) {
-        isFreshBlood = freshBlood;
+    public void setIsFreshBlood(String isFreshBlood) {
+        this.isFreshBlood = isFreshBlood;
     }
 
-    public Boolean getHotStreak() {
+    public String getIsHotStreak() {
         return isHotStreak;
     }
 
-    public void setHotStreak(Boolean hotStreak) {
-        isHotStreak = hotStreak;
+    public void setIsHotStreak(String isHotStreak) {
+        this.isHotStreak = isHotStreak;
     }
 
     public String getDivision() {
@@ -45,20 +48,20 @@ public class Entry {
         this.division = division;
     }
 
-    public Boolean getInactive() {
+    public String getIsInactive() {
         return isInactive;
     }
 
-    public void setInactive(Boolean inactive) {
-        isInactive = inactive;
+    public void setIsInactive(String isInactive) {
+        this.isInactive = isInactive;
     }
 
-    public Boolean getVeteran() {
+    public String getIsVeteran() {
         return isVeteran;
     }
 
-    public void setVeteran(Boolean veteran) {
-        isVeteran = veteran;
+    public void setIsVeteran(String isVeteran) {
+        this.isVeteran = isVeteran;
     }
 
     public String getPlaystyle() {
