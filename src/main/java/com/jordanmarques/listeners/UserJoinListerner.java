@@ -70,8 +70,8 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
         for(Iterator<IRole> it = rolesForGuild.iterator(); it.hasNext();){
             IRole role = it.next();
             String currentRoleName = role.getName();
-            if(Tier.getTier().containsKey(currentRoleName)){
-                if(Tier.getTier().get(currentRoleName) != Tier.getTier().get(tier)){
+            if(Tier.getTiers().containsKey(currentRoleName)){
+                if(Tier.getTiers().get(currentRoleName) != Tier.getTiers().get(tier)){
                     it.remove();
                 }
             }

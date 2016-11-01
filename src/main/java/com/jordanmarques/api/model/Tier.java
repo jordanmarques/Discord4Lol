@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tier {
-    public static Map<String, Integer> getTier(){
+    public static Map<String, Integer> getTiers(){
 
         HashMap<String, Integer> map = new HashMap<>();
         map.put("BRONZE",1);
