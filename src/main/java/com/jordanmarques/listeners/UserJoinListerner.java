@@ -3,6 +3,7 @@ package com.jordanmarques.listeners;
 import com.jordanmarques.api.LolApi;
 import com.jordanmarques.api.model.Queue;
 import com.jordanmarques.api.model.Summoner;
+import com.jordanmarques.api.model.Tier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -49,16 +48,49 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
 
         String tier = getSoloQueueStats(queues).getTier();
         IGuild server = user.getClient().getGuilds().get(0);
-        List<IRole> roles = server.getRoles();
+
+        manageTierRoles(user, server, tier);
+
+
+    }
+
+    private void manageTierRoles(IUser user, IGuild server, String tier){
+
+        List<IRole> roles = removeLowerTierAndAddNewTier(user, server, tier);
 
         try {
-            user.addRole(getCorrectRole(tier, roles));
+            server.editUserRoles(user, roles.toArray(new IRole[roles.size()]));
         } catch (MissingPermissionsException | RateLimitException | DiscordException e) {
             e.printStackTrace();
         }
     }
 
-    private IRole getCorrectRole(String tier, List<IRole> roles) {
+    private List<IRole> removeLowerTierAndAddNewTier(IUser user, IGuild server, String tier) {
+
+        List<IRole> rolesForGuild = user.getRolesForGuild(server);
+        for(Iterator<IRole> it = rolesForGuild.iterator(); it.hasNext();){
+            IRole role = it.next();
+            String currentRoleName = role.getName();
+            if(Tier.getTier().containsKey(currentRoleName)){
+                if(Tier.getTier().get(currentRoleName) < Tier.getTier().get(tier)){
+                    it.remove();
+                }
+            }
+        }
+
+        List<IRole> roles = addTier(server, tier, rolesForGuild);
+
+        return roles;
+    }
+
+    private List<IRole> addTier(IGuild server, String tier, List<IRole> rolesForGuild){
+
+        rolesForGuild.add(getTierRole(tier, server.getRoles()));
+
+        return rolesForGuild;
+    }
+
+    private IRole getTierRole(String tier, List<IRole> roles) {
 
         return  roles.stream()
                 .filter(role -> role.getName().equals(tier))
