@@ -77,13 +77,6 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
             }
         }
 
-        List<IRole> roles = addTier(server, tier, rolesForGuild);
-
-        return roles;
-    }
-
-    private List<IRole> addTier(IGuild server, String tier, List<IRole> rolesForGuild){
-
         rolesForGuild.add(getTierRole(tier, server.getRoles()));
 
         return rolesForGuild;

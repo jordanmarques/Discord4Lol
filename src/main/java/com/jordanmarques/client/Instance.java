@@ -13,6 +13,7 @@ import sx.blah.discord.handle.impl.events.*;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.RateLimitException;
 
+import java.nio.charset.Charset;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -54,6 +55,7 @@ public class Instance{
 
     @EventSubscriber
     public void onReady(ReadyEvent event) {
+        log.info("CHARSET: " + Charset.defaultCharset().toString());
         log.info("*** Discord bot armed ***");
     }
 
