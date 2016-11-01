@@ -17,7 +17,6 @@ import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -56,7 +55,7 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
 
     private void manageTierRoles(IUser user, IGuild server, String tier){
 
-        List<IRole> roles = removeLowerTierAndAddNewTier(user, server, tier);
+        List<IRole> roles = removeUncorrectTierAndAddNewTier(user, server, tier);
 
         try {
             server.editUserRoles(user, roles.toArray(new IRole[roles.size()]));
@@ -65,14 +64,14 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
         }
     }
 
-    private List<IRole> removeLowerTierAndAddNewTier(IUser user, IGuild server, String tier) {
+    private List<IRole> removeUncorrectTierAndAddNewTier(IUser user, IGuild server, String tier) {
 
         List<IRole> rolesForGuild = user.getRolesForGuild(server);
         for(Iterator<IRole> it = rolesForGuild.iterator(); it.hasNext();){
             IRole role = it.next();
             String currentRoleName = role.getName();
             if(Tier.getTier().containsKey(currentRoleName)){
-                if(Tier.getTier().get(currentRoleName) < Tier.getTier().get(tier)){
+                if(Tier.getTier().get(currentRoleName) != Tier.getTier().get(tier)){
                     it.remove();
                 }
             }
@@ -110,13 +109,13 @@ public class UserJoinListerner implements IListener<UserVoiceChannelJoinEvent> {
         Map<String, String> maptoreturn = new HashMap<>();
 
         try {
-            try(Stream<String> lines = Files.lines(Paths.get(ClassLoader.getSystemResource("usernames.data").toURI()), Charset.defaultCharset())) {
+            try(Stream<String> lines = Files.lines(Paths.get(System.getProperty("user.dir") + "/usernames.data"), Charset.defaultCharset())) {
                 lines.forEachOrdered(line -> {
                     String[] username = line.split(":");
                     maptoreturn.put(username[0], username[1]);
                 });
             }
-        } catch (URISyntaxException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
